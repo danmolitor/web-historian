@@ -1,15 +1,18 @@
 var path = require('path');
 var archive = require('../helpers/archive-helpers');
-var httpHelpers = require('./http-helpers');
+var utils = require('./http-helpers');
 var urlParser = require('url');
 
 var actions = {
     'GET': function(request, response) {
+      var parts = urlParser.parse(request.url);
+      var urlPath = parts.pathname === '/' ? '/index.html' : parts.pathname;
+      utils.serveAssets(response, urlPath);
 
-      response.end(archive.paths.indexHTML);
+
     },
     'POST': function(request, response) {
-      httpHelpers.serveAssets(response);
+      utils.serveAssets(response);
 
     },
     // 'OPTIONS': function(request, response) {
@@ -22,6 +25,6 @@ exports.handleRequest = function (request, response) {
     if (action) {
         action(request, response);
     } else {
-        httpHelpers.sendResponse(response, "Not Found", 404);
+        utils.sendResponse(response, "Not Found", 404);
     }
 };
