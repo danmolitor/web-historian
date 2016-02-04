@@ -10,12 +10,35 @@ exports.headers = headers = {
   'Content-Type': "text/html"
 };
 
-exports.serveAssets = function(res, asset, callback) {
+//Reading and sending of files here.
+exports.serveAssets = function(response, asset, callback) {
   // Write some code here that helps serve up your static files!
   // (Static files are things like html (yours or archived from others...),
   // css, or anything that doesn't change often.)
+  var repondedData;
+  if (asset === "archive.paths.indexHTML"){
+    sendResponse(response, JSON.parse(archive.paths.indexHTML));
+  }
+
 };
 
 
 
 // As you progress, keep thinking about what helper functions you can put here!
+
+
+var sendResponse = function(response, data, statusCode) {
+    statusCode = statusCode || 200;
+    response.writeHead(statusCode, headers);
+    response.end(data);
+};
+
+exports.collectData = function(req, callback) {
+    var data = '';
+    req.on('data', function(chunk) {
+        data += chunk;
+    });
+    req.on('end', function() {
+        callback(data);
+    });
+};
