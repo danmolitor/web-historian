@@ -10,9 +10,6 @@ exports.headers = headers = {
   'Content-Type': "text/html"
 };
 
-
-
-
 // As you progress, keep thinking about what helper functions you can put here!
 
 
@@ -45,30 +42,24 @@ exports.serveAssets = function(response, asset, callback) {
   var encoding = {encoding: 'utf8'};
 
   //1. Check in public folder
-
+  //2. Then check in archived sites.
   fs.readFile( archive.paths.siteAssets + asset, encoding, function(err, data){
-
     if (err) {
-
       fs.readFile ( archive.paths.archivedSites + asset, encoding, function(err, data){
-
         if (err){
-
           callback ? callback() : exports.send404(response);
-
         } else {
-
           exports.sendResponse(response, data);
-
         }
-
       });
-
     } else {
-
       exports.sendResponse(response, data);
     }
-
   });
+};
 
+exports.sendRedirect = function(response, location, status){
+  status = status || 302;
+  response.writeHead(status, {location: location});
+  response.end();
 };
